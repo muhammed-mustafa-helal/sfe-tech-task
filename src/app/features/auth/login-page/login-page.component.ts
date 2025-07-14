@@ -22,6 +22,8 @@ import { MatButton } from '@angular/material/button';
 })
 export class LoginPageComponent {
   private fb: FormBuilder = inject(FormBuilder);
+  private authService: AuthService = inject(AuthService);
+  private router: Router = inject(Router);
 
   error: WritableSignal<string> = signal('');
 
@@ -31,5 +33,16 @@ export class LoginPageComponent {
   });
 
   submit(): void {
+    if (this.form.invalid) return;
+    const { username, password } = this.form.value;
+    this.authService.login(username ?? '', password ?? '').subscribe({
+      next: (res) => {
+        this.authService.setSession(res.token, res.user);
+        this.router.navigate(['/users']);
+      },
+      error: (err) => {
+        this.error.set('Invalid credentials');
+      }
+    });
   }
 }
