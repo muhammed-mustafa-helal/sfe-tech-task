@@ -12,12 +12,18 @@
       <input matInput type="password" formControlName="password"/>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
-      Login
+    <button mat-raised-button color="primary" type="submit" 
+            [disabled]="form.invalid || isLoading()">
+      @if (isLoading()) {
+        <mat-spinner diameter="20"></mat-spinner>
+        <span>Logging in...</span>
+      } @else {
+        Login
+      }
     </button>
 
     @if (error()) {
-      <p>{{ error() }}</p>
+      <p class="error-message">{{ error() }}</p>
     }
   </form>
 </mat-card>

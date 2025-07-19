@@ -5,6 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login-page',
@@ -15,7 +16,8 @@ import { MatButton } from '@angular/material/button';
     MatFormField,
     MatCard,
     ReactiveFormsModule,
-    MatButton
+    MatButton,
+    MatProgressSpinner
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss'
@@ -26,6 +28,7 @@ export class LoginPageComponent {
   private router: Router = inject(Router);
 
   error: WritableSignal<string> = signal('');
+  isLoading: WritableSignal<boolean> = signal(false);
 
   form = this.fb.group({
     username: ['', Validators.required],
@@ -34,6 +37,10 @@ export class LoginPageComponent {
 
   submit(): void {
     if (this.form.invalid) return;
+    
+    this.isLoading.set(true);
+    this.error.set('');
+    
     const { username, password } = this.form.value;
     this.authService.login(username ?? '', password ?? '').subscribe({
       next: (res) => {
@@ -42,6 +49,9 @@ export class LoginPageComponent {
       },
       error: (err) => {
         this.error.set('Invalid credentials');
+      },
+      complete: () => {
+        this.isLoading.set(false);
       }
     });
   }

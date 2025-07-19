@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, delay } from 'rxjs';
 import { AuthResponse } from '../../shared/models/auth';
 import { User } from '../../shared/models/user';
-import { CanActivate } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -12,7 +11,8 @@ export class AuthService {
   private readonly apiUrl: string = 'api/auth';
 
   login(username: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { username, password });
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { username, password })
+      .pipe(delay(2000));
   }
 
   setSession(token: string, user: User): void {
