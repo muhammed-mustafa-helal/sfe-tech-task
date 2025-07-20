@@ -1,6 +1,9 @@
+<div class="fullscreen-spinner" *ngIf="isLoading()">
+  <mat-spinner diameter="48"></mat-spinner>
+</div>
 <mat-card class="login-card">
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <h2>Login</h2>
+    <h2 class="login-title">Login</h2>
 
     <mat-form-field appearance="fill">
       <mat-label>Username</mat-label>
@@ -14,12 +17,7 @@
 
     <button mat-raised-button color="primary" type="submit" 
             [disabled]="form.invalid || isLoading()">
-      @if (isLoading()) {
-        <mat-spinner diameter="20"></mat-spinner>
-        <span>Logging in...</span>
-      } @else {
-        Login
-      }
+      Login
     </button>
 
     @if (error()) {
